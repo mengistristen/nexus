@@ -7,3 +7,9 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.4.4", features = ["derive"] }
+dirs = "5.0.1"
+serde = { version = "1.0.189", features = ["derive"] }
+serde_yaml = "0.9.25"
+sha1 = "0.10.6"
+tempfile = "3.8.0"
+uuid = { version = "1.4.1", features = ["v4", "fast-rng"] }
