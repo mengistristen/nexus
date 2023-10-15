@@ -16,7 +16,7 @@ pub enum Commands {
     /// Create a new note.
     #[command(arg_required_else_help = true)]
     Create {
-        /// The name of the file to create.
-        file_name: String,
+        /// The name of the note to create.
+        name: String,
     },
 }
