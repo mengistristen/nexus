@@ -1,3 +1,7 @@
 use std::path::PathBuf;
 
-pub fn link_note(_: PathBuf, _: String, _: String, _: Option<String>) {}
+use crate::utils::get_note_names;
+
+pub fn link_note(_: PathBuf, _: String, _: String, _: Option<String>) {
+    let _ = get_note_names();
+}

@@ -9,3 +9,23 @@ pub fn get_data_dir() -> PathBuf {
 
     data_dir
 }
+
+/// Searches the data directory and returns the names of all note files.
+pub fn get_note_names() -> Vec<String> {
+    let data_dir = get_data_dir();
+    let paths = fs::read_dir(data_dir).expect("failed to read data dir");
+    let mut result = vec![];
+
+    for path in paths {
+        if let Ok(entry) = path {
+            let file_name = entry.file_name();
+            let file_name_str = file_name.to_str().expect("file name to convert to str");
+
+            if file_name_str.ends_with(".md") {
+                result.push(file_name_str.to_owned());
+            }
+        }
+    }
+
+    result
+}
