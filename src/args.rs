@@ -1,4 +1,4 @@
-//! A module for parsing the command line arguments for nexus.
+//! This module contains the types used for parsing command line arguments.
 pub use clap::Parser;
 use clap::{command, Subcommand};
 

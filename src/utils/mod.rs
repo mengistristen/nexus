@@ -1,6 +1,11 @@
+//! This module contains utilities used throughout the program.
 use std::{fs, path::PathBuf};
 
 /// Creates and returns the path for the application data directory.
+///
+/// # Returns
+///
+/// Returns the path to the data directory.
 pub fn get_data_dir() -> PathBuf {
     let mut data_dir = dirs::data_local_dir().expect("failed to find data directory");
 
@@ -11,6 +16,10 @@ pub fn get_data_dir() -> PathBuf {
 }
 
 /// Searches the data directory and returns the names of all note files.
+///
+/// # Returns
+///
+/// Returns a list of the names of all notes.
 pub fn get_note_names() -> Vec<String> {
     let data_dir = get_data_dir();
     let paths = fs::read_dir(data_dir).expect("failed to read data dir");

@@ -1,3 +1,4 @@
+//! This module contains the definition for metadata.
 use serde::{Deserialize, Serialize};
 use sha1::Digest;
 
@@ -13,6 +14,12 @@ pub struct Metadata {
 }
 
 impl Metadata {
+    /// Creates a new `Metadata`.
+    ///
+    /// # Parameters
+    ///
+    /// - `name`: The user's name for the note.
+    /// - `content`: A reference to the contents of the note.
     pub fn new(name: String, content: &String) -> Self {
         let mut hasher = sha1::Sha1::new();
 
