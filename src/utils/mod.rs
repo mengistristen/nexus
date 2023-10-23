@@ -1,6 +1,6 @@
-use std::{path::PathBuf, fs};
+use std::{fs, path::PathBuf};
 
-/// Creates and returns the path for the application data directory. 
+/// Creates and returns the path for the application data directory.
 pub fn get_data_dir() -> PathBuf {
     let mut data_dir = dirs::data_local_dir().expect("failed to find data directory");
 

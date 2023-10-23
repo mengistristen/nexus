@@ -1,5 +1,10 @@
-use std::{env, process::Command, io::{Seek, SeekFrom, Read, Write}, path::PathBuf, fs};
 use sha1::Digest;
+use std::{
+    env, fs,
+    io::{Read, Seek, SeekFrom, Write},
+    path::PathBuf,
+    process::Command,
+};
 
 use tempfile::NamedTempFile;
 
@@ -36,7 +41,7 @@ fn get_user_content(mut file: NamedTempFile) -> String {
 }
 
 /// Hashes the note contents and creates the metadata for a note.
-fn create_metadata(name: String, content: &String) -> Metadata  {
+fn create_metadata(name: String, content: &String) -> Metadata {
     let mut hasher = sha1::Sha1::new();
 
     hasher.update(content.as_bytes());

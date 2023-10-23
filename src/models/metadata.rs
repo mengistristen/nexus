@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// The metadata associated with a note.
 #[derive(Serialize, Deserialize)]

@@ -27,6 +27,6 @@ pub enum Commands {
         /// The name of the target note.
         target: String,
         /// An optional branch name.
-        branch: Option<String>
-    }
+        branch: Option<String>,
+    },
 }
