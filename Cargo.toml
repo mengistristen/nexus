@@ -20,4 +20,5 @@ serde = { version = "1.0.189", features = ["derive"] }
 serde_yaml = "0.9.25"
 sha1 = "0.10.6"
 tempfile = "3.8.0"
+thiserror = "1.0.50"
 uuid = { version = "1.4.1", features = ["v4", "fast-rng"] }

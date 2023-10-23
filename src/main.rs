@@ -10,7 +10,7 @@ fn main() {
     let args = Args::parse();
     let data_dir = get_data_dir();
 
-    match args.command {
+    let result = match args.command {
         Commands::Create { name } => create_note(data_dir, name),
         Commands::Link {
             source,
@@ -18,4 +18,9 @@ fn main() {
             branch,
         } => link_note(data_dir, source, target, branch),
     };
+
+    if let Err(err) = result {
+        eprintln!("Error: {}", err);
+        std::process::exit(1);
+    }
 }
