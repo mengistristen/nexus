@@ -1,4 +1,3 @@
-use sha1::Digest;
 use std::{
     env, fs,
     io::{Read, Seek, SeekFrom, Write},
@@ -8,10 +7,7 @@ use std::{
 
 use tempfile::NamedTempFile;
 
-use crate::{
-    errors::{NexusError, NexusResult},
-    models::metadata::Metadata,
-};
+use crate::{errors::NexusResult, models::metadata::Metadata};
 
 /// Creates a temporary file and spawns an editor to allow the user to write
 /// their note.
@@ -38,22 +34,6 @@ fn get_user_content(mut file: NamedTempFile) -> NexusResult<String> {
     file.read_to_string(&mut buffer)?;
 
     Ok(buffer)
-}
-
-/// Hashes the note contents and creates the metadata for a note.
-fn create_metadata(name: String, content: &String) -> Metadata {
-    let mut hasher = sha1::Sha1::new();
-
-    hasher.update(content.as_bytes());
-
-    let hash = hasher.finalize();
-    let hash = format!("{:x}", hash);
-
-    Metadata {
-        name,
-        hash,
-        prev: vec![],
-    }
 }
 
 /// Write the metadata and content to a temporary file and renames that file to
@@ -90,7 +70,8 @@ fn write_note(data_dir: PathBuf, metadata: Metadata, content: String) -> NexusRe
 pub fn create_note(data_dir: PathBuf, name: String) -> NexusResult<()> {
     let user_note = create_user_note()?;
     let content = get_user_content(user_note)?;
-    let metadata = create_metadata(name, &content);
+
+    let metadata = Metadata::new(name, &content);
 
     write_note(data_dir, metadata, content)?;
 
