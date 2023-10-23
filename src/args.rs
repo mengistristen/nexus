@@ -19,4 +19,14 @@ pub enum Commands {
         /// The name of the note to create.
         name: String,
     },
+    /// Link a note to another note.
+    #[command(arg_required_else_help = true)]
+    Link {
+        /// The name of the source note.
+        source: String,
+        /// The name of the target note.
+        target: String,
+        /// An optional branch name.
+        branch: Option<String>
+    }
 }
