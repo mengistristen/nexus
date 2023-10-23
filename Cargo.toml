@@ -5,6 +5,14 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "nexus_cli"
+path = "src/main.rs"
+
+[lib]
+name = "nexus_core" 
+path = "src/lib.rs"
+
 [dependencies]
 clap = { version = "4.4.4", features = ["derive"] }
 dirs = "5.0.1"
