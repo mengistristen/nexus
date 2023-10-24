@@ -13,4 +13,14 @@ pub enum NexusError {
     /// A wrapper around a serialization error.
     #[error(transparent)]
     SerializationError(#[from] serde_yaml::Error),
+    /// A wrapper around an error pertaining to a `Note`.
+    #[error(transparent)]
+    NoteError(#[from] NoteError),
+}
+
+/// Error type specific to notes.
+#[derive(Error, Debug)]
+pub enum NoteError {
+    #[error("Error deserializing note")]
+    DeserializationError,
 }

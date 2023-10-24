@@ -1,8 +1,8 @@
 //! This module is used by the link subcommand to link notes together.
 //!
-//! A single note can be linked to several other notes via a list of prev 
+//! A single note can be linked to several other notes via a list of prev
 //! pointers. Each prev pointer has an associated branch name that is used
-//! when consolidating notes. If link is called without a branch name, 
+//! when consolidating notes. If link is called without a branch name,
 //! it will attempt to link via the 'default' branch name.
 //!
 //! # Example

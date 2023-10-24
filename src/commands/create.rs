@@ -1,8 +1,8 @@
 //! This module is used by the create subcommand to create new notes.
 //!
-//! Similar to what git will do when you create a commit, this will 
+//! Similar to what git will do when you create a commit, this will
 //! spawn an editor to allow the user to write the contents of their note
-//! before saving it off. 
+//! before saving it off.
 //!
 //! Example:
 //!
@@ -11,14 +11,17 @@
 //! ```
 use std::{
     env, fs,
-    io::{Read, Seek, SeekFrom, Write},
+    io::{Read, Seek, SeekFrom},
     path::PathBuf,
     process::Command,
 };
 
 use tempfile::NamedTempFile;
 
-use crate::{errors::NexusResult, models::metadata::Metadata};
+use crate::{
+    errors::NexusResult,
+    models::{metadata::Metadata, note::Note},
+};
 
 /// Creates a temporary file and spawns an editor to allow the user to write
 /// their note.
@@ -80,14 +83,11 @@ fn write_note(data_dir: PathBuf, metadata: Metadata, content: String) -> NexusRe
 
     file_path.push(format!("{}.md", uuid::Uuid::new_v4()));
 
+    // create a temporary file and write the note's contents to it
     let mut temp_file = tempfile::NamedTempFile::new_in(data_dir_temp)?;
-    let metadata_str = serde_yaml::to_string(&metadata)?;
+    let note = Note::new(metadata, content);
 
-    // write metadata
-    temp_file.write_all(format!("---\n{}---\n", metadata_str).as_bytes())?;
-
-    // write content
-    temp_file.write_all(content.as_bytes())?;
+    note.write(&mut temp_file)?;
 
     // atomically rename to ensure the entire file is written
     fs::rename(temp_file.path(), file_path)?;
@@ -99,7 +99,7 @@ fn write_note(data_dir: PathBuf, metadata: Metadata, content: String) -> NexusRe
 ///
 /// # Parameters
 ///
-/// - `data_dir`: The directory in which to store the note. 
+/// - `data_dir`: The directory in which to store the note.
 /// - `name`: The name of the note.
 pub fn create_note(data_dir: PathBuf, name: String) -> NexusResult<()> {
     let user_note = create_user_note()?;
