@@ -1,4 +1,6 @@
 //! This module contains the definition for metadata.
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 use sha1::Digest;
 
@@ -9,8 +11,8 @@ pub struct Metadata {
     pub name: String,
     /// The hash of the contents of the note.
     pub hash: String,
-    /// A list of branch names and pointers to previous notes.
-    pub prev: Vec<(String, String)>,
+    /// A `HashMap` of branch names to their associated notes.
+    pub prev: HashMap<String, String>,
 }
 
 impl Metadata {
@@ -31,7 +33,7 @@ impl Metadata {
         Metadata {
             name,
             hash,
-            prev: vec![],
+            prev: HashMap::new(),
         }
     }
 }

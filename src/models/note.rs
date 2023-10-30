@@ -8,7 +8,7 @@ use super::metadata::Metadata;
 /// A note containing metadata and string contents.
 pub struct Note {
     /// The note's metadata.
-    metadata: Metadata,
+    pub metadata: Metadata,
     /// The contents of the note.
     contents: String,
 }

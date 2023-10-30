@@ -1,7 +1,7 @@
 //! This module contains utilities used throughout the program.
 use std::{fs, path::PathBuf};
 
-use crate::errors::NexusResult;
+use crate::{errors::NexusResult, models::note::Note};
 
 /// Creates and returns the path for the application data directory.
 ///
@@ -22,11 +22,11 @@ pub fn get_data_dir() -> PathBuf {
 /// # Parameters
 ///
 /// - `dir`: The dir to search to find notes.
-/// 
+///
 /// # Returns
 ///
 /// Returns a list of the names of all notes.
-pub fn get_note_file_names(dir: PathBuf) -> NexusResult<Vec<String>> {
+pub fn get_note_file_names(dir: &PathBuf) -> NexusResult<Vec<String>> {
     let paths = fs::read_dir(dir)?;
     let mut file_names = vec![];
 
@@ -42,4 +42,29 @@ pub fn get_note_file_names(dir: PathBuf) -> NexusResult<Vec<String>> {
     }
 
     Ok(file_names)
+}
+
+/// Writes a note to a temporary file and renames that file to place it in its
+/// permanent location. This prevents partial notes from being written.
+///
+/// # Parameters
+///
+/// - `dir`: The directory in which to store the note.
+/// - `note`: The note to save.
+pub fn write_note(dir: &PathBuf, note: &Note, file_name: String) -> NexusResult<()> {
+    let temp_path = dir.join("tmp");
+
+    fs::create_dir_all(&temp_path)?;
+
+    let mut temp_file = tempfile::NamedTempFile::new_in(temp_path)?;
+
+    note.write(&mut temp_file)?;
+
+    // create the path to the new file
+    let file_path = dir.join(file_name);
+
+    // atomically rename to ensure the entire file is written
+    fs::rename(temp_file.path(), file_path)?;
+
+    Ok(())
 }

@@ -10,7 +10,7 @@
 //! nexus-cli create "My Note"
 //! ```
 use std::{
-    env, fs,
+    env,
     io::{Read, Seek, SeekFrom},
     path::PathBuf,
     process::Command,
@@ -21,6 +21,7 @@ use tempfile::NamedTempFile;
 use crate::{
     errors::NexusResult,
     models::{metadata::Metadata, note::Note},
+    utils::write_note,
 };
 
 /// Creates a temporary file and spawns an editor to allow the user to write
@@ -62,39 +63,6 @@ fn get_user_content(mut file: NamedTempFile) -> NexusResult<String> {
     Ok(buffer)
 }
 
-/// Writes the metadata and content to a temporary file and renames that file to
-/// place it in its permanent location. This prevents partial notes from being
-/// written.
-///
-/// # Parameters
-///
-/// - `data_dir`: The directory in which to store the note.
-/// - `metadata`: The note's metadata.
-/// - `content`: The note's content.
-fn write_note(data_dir: PathBuf, metadata: Metadata, content: String) -> NexusResult<()> {
-    // create a directory for temporary files
-    let mut data_dir_temp = data_dir.clone();
-
-    data_dir_temp.push("tmp");
-    fs::create_dir_all(&data_dir_temp)?;
-
-    // create the path to the new file
-    let mut file_path = data_dir.clone();
-
-    file_path.push(format!("{}.md", uuid::Uuid::new_v4()));
-
-    // create a temporary file and write the note's contents to it
-    let mut temp_file = tempfile::NamedTempFile::new_in(data_dir_temp)?;
-    let note = Note::new(metadata, content);
-
-    note.write(&mut temp_file)?;
-
-    // atomically rename to ensure the entire file is written
-    fs::rename(temp_file.path(), file_path)?;
-
-    Ok(())
-}
-
 /// Creates a new note.
 ///
 /// # Parameters
@@ -107,7 +75,10 @@ pub fn create_note(data_dir: PathBuf, name: String) -> NexusResult<()> {
 
     let metadata = Metadata::new(name, &content);
 
-    write_note(data_dir, metadata, content)?;
+    // create a temporary file and write the note's contents to it
+    let note = Note::new(metadata, content);
+
+    write_note(&data_dir, &note, format!("{}.md", uuid::Uuid::new_v4()))?;
 
     Ok(())
 }

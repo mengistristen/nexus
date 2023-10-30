@@ -24,4 +24,7 @@ pub enum NoteError {
     /// Occurs when there is an error deserializing a note.
     #[error("unable to deserialize note")]
     Deserialization,
+    /// Occurs when a note could not be found.
+    #[error("failed to find note with the name {0}")]
+    DoesNotExist(String),
 }

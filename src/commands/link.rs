@@ -12,10 +12,49 @@
 //! ```
 use std::path::PathBuf;
 
-use crate::{errors::NexusResult, utils::get_note_file_names};
+use crate::{
+    errors::{NexusResult, NoteError},
+    models::note::Note,
+    utils::{get_note_file_names, write_note},
+};
 
-pub fn link_note(data_dir: PathBuf, _: String, _: String, _: Option<String>) -> NexusResult<()> {
-    let _ = get_note_file_names(data_dir);
+/// Links a note to a previous note.
+///
+/// # Parameters
+///
+/// - `data_dir`: The directory to read for notes.
+/// - `source`: The beginning of the file name for the source note.
+/// - `target`: The beginning of the file name for the target note.
+/// - `branch`: The optional branch name.
+pub fn link_note(
+    data_dir: PathBuf,
+    source: String,
+    target: String,
+    branch: Option<String>,
+) -> NexusResult<()> {
+    let note_file_names = get_note_file_names(&data_dir)?;
+
+    let source_name = note_file_names
+        .iter()
+        .find(|&name| name.starts_with(&source))
+        .ok_or(NoteError::DoesNotExist(source))?;
+    let target_name = note_file_names
+        .iter()
+        .find(|&name| name.starts_with(&target))
+        .ok_or(NoteError::DoesNotExist(target))?;
+
+    let note_path = data_dir.join(source_name);
+
+    let mut note = Note::from_file(note_path)?;
+    let branch = if let Some(name) = branch {
+        name
+    } else {
+        "default".to_owned()
+    };
+
+    note.metadata.prev.insert(branch, target_name.clone());
+
+    write_note(&data_dir, &note, source_name.clone())?;
 
     Ok(())
 }
