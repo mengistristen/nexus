@@ -21,6 +21,7 @@ pub enum NexusError {
 /// Error type specific to notes.
 #[derive(Error, Debug)]
 pub enum NoteError {
-    #[error("Error deserializing note")]
-    DeserializationError,
+    /// Occurs when there is an error deserializing a note.
+    #[error("unable to deserialize note")]
+    Deserialization,
 }

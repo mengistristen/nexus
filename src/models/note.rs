@@ -45,7 +45,7 @@ impl Note {
         let parts: Vec<&str> = source.split("---\n").collect();
 
         if parts.len() != 3 {
-            return Err(NoteError::DeserializationError)?;
+            return Err(NoteError::Deserialization)?;
         }
 
         let metadata = serde_yaml::from_str(parts[1])?;
